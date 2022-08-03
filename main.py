@@ -14,7 +14,7 @@ def checker(src):
     for i in items:
         if int(i.find('td').text) < my_id:
             pre_items.append(i)
-    return f'{src_name}\t Человек выше меня: {len(pre_items)}'
+    return f'{src_name}\n Человек выше меня: {len(pre_items)}'
 
 
 def downloader(url):
@@ -39,8 +39,8 @@ async def start(message: types.Message):
     messages = []
     for URL in urls:
         source = downloader(URL)
-        message = checker(source)
-        messages.append(message)
+        msg = checker(source)
+        messages.append(msg)
     await message.reply('\n'.join(messages))
 
 
