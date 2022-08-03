@@ -1,3 +1,5 @@
+from config import TOKEN
+from aiogram import Dispatcher, Bot, executor, types
 from bs4 import BeautifulSoup
 import requests
 import re
@@ -23,13 +25,24 @@ def downloader(url):
     return requests.get(url, headers=headers).text
 
 
-if __name__ == '__main__':
-    urls = [
-        'https://lists.rosnou.ru/64/1/1222',
-        'https://lists.rosnou.ru/64/1/1224',
-        'https://lists.rosnou.ru/64/1/1234'
-    ]
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot)
+urls = [
+    'https://lists.rosnou.ru/64/1/1222',
+    'https://lists.rosnou.ru/64/1/1224',
+    'https://lists.rosnou.ru/64/1/1234'
+]
+
+
+@dp.message_handler(commands='start')
+async def start(message: types.Message):
+    messages = []
     for URL in urls:
         source = downloader(URL)
-        count = checker(source)
-        print(count)
+        message = checker(source)
+        messages.append(message)
+    await message.reply('\n'.join(messages))
+
+
+if __name__ == '__main__':
+    executor.start_polling(dp)
